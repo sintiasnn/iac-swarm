@@ -105,6 +105,7 @@ slim.report.json
 terraform.tfstate*
 terraform.tfvars*
 !terraform.tfvars.example
+.terragrunt-cache
 
 # moon
 .moon/cache
