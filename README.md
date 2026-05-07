@@ -289,5 +289,3 @@ This repository is based on the monorepo template by [Zero One Group](https://gi
 
 ---
 
-**Happy investigating! 🔍**
-If you have questions or want to discuss the case, feel free to open an issue.
