@@ -3,7 +3,7 @@ include "root" {
 }
 
 terraform {
-  source = "../../modules/ec2"
+  source = "../../../modules/ec2"
 }
 
 dependency "vpc" {
@@ -31,7 +31,7 @@ inputs = {
   project_name   = local.project_name
 
   instances = {
-    worker-staging-1 = {
+    worker-dev-1 = {
       ami_instance       = local.variables.ubuntu_noble_ami
       instance_type      = local.variables.instance_types["worker-dev-staging"]
       subnet_id          = dependency.vpc.outputs.subnet_public_all[0]
@@ -45,7 +45,7 @@ inputs = {
         "arn:aws:s3:::lgtm-monitoring"
       ]
       ssm_parameter_paths = [
-        "/lgtm/swarm/*",
+        "/swarm-iac/swarm/*",
       ]
       cluster_identifier = "app-cluster"
     }

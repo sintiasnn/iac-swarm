@@ -7,15 +7,15 @@ terraform {
 }
 
 dependency "vpc" {
-  config_path = "../../dev/vpc"
+  config_path = "../../environments/dev/vpc"
 }
 
 dependency "security_groups" {
-  config_path = "../../dev/security-groups"
+  config_path = "../../environments/dev/security-groups"
 }
 
 dependency "keypair" {
-  config_path = "../../dev/keypair"
+  config_path = "../../environments/dev/keypair"
 }
 
 dependency "elastic_ip" {
@@ -63,7 +63,7 @@ inputs = {
         "arn:aws:s3:::lgtm-monitoring"
       ]
       ssm_parameter_paths = [
-        "/lgtm/swarm/*",
+        "/swarm-iac/swarm/*",
       ]
       cluster_identifier = "app-cluster"
     }
@@ -84,7 +84,7 @@ inputs = {
         "arn:aws:s3:::lgtm-monitoring"
       ]
       ssm_parameter_paths = [
-        "/lgtm/swarm/*",
+        "/swarm-iac/swarm/*",
       ]
     }
 
@@ -102,7 +102,7 @@ inputs = {
         "arn:aws:s3:::lgtm-monitoring"
       ]
       ssm_parameter_paths = [
-        "/lgtm/swarm/*",
+        "/swarm-iac/swarm/*",
       ]
       cluster_identifier = "monitoring-cluster"
     }
@@ -121,7 +121,7 @@ inputs = {
         "arn:aws:s3:::lgtm-monitoring"
       ]
       ssm_parameter_paths = [
-        "/lgtm/swarm/*",
+        "/swarm-iac/swarm/*",
       ]
       cluster_identifier = "app-cluster"
     }

@@ -3,7 +3,7 @@ include "root" {
 }
 
 terraform {
-  source = "../../modules/full-vpc"
+  source = "../../../modules/full-vpc"
 }
 
 inputs = {

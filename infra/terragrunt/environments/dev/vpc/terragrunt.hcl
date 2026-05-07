@@ -3,11 +3,11 @@ include "root" {
 }
 
 terraform {
-  source = "../../modules/vpc"
+  source = "../../../modules/vpc"
 }
 
 dependency "vpc_base" {
-  config_path = "../../shared/vpc-base"
+  config_path = "../../../shared/vpc-base"
 }
 
 locals {

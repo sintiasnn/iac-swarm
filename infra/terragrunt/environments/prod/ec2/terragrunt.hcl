@@ -3,7 +3,7 @@ include "root" {
 }
 
 terraform {
-  source = "../../modules/ec2"
+  source = "../../../modules/ec2"
 }
 
 dependency "vpc" {
@@ -45,7 +45,7 @@ inputs = {
         "arn:aws:s3:::lgtm-monitoring"
       ]
       ssm_parameter_paths = [
-        "/lgtm/swarm/*",
+        "/swarm-iac/swarm/*",
       ]
       cluster_identifier = "app-cluster"
     }
@@ -64,7 +64,7 @@ inputs = {
         "arn:aws:s3:::lgtm-monitoring"
       ]
       ssm_parameter_paths = [
-        "/lgtm/swarm/*",
+        "/swarm-iac/swarm/*",
       ]
       cluster_identifier = "app-cluster"
     }
@@ -83,7 +83,7 @@ inputs = {
         "arn:aws:s3:::lgtm-monitoring"
       ]
       ssm_parameter_paths = [
-        "/lgtm/swarm/*",
+        "/swarm-iac/swarm/*",
       ]
       cluster_identifier = "app-cluster"
     }
@@ -102,7 +102,7 @@ inputs = {
         "arn:aws:s3:::lgtm-monitoring"
       ]
       ssm_parameter_paths = [
-        "/lgtm/swarm/*",
+        "/swarm-iac/swarm/*",
       ]
       cluster_identifier = "app-cluster"
     }
@@ -121,7 +121,7 @@ inputs = {
         "arn:aws:s3:::lgtm-monitoring"
       ]
       ssm_parameter_paths = [
-        "/lgtm/swarm/*",
+        "/swarm-iac/swarm/*",
       ]
       cluster_identifier = "app-cluster"
     }
