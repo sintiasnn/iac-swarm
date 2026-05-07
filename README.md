@@ -283,6 +283,10 @@ Available stacks: `postgres`, `redis`, `minio`, `clickhouse`, `mailpit`, `instru
 - [Terragrunt Documentation](https://terragrunt.gruntwork.io/docs/)
 - [Docker Swarm Documentation](https://docs.docker.com/engine/swarm/)
 
+## Acknowledgments
+
+This repository is based on the monorepo template by [Zero One Group](https://github.com/zero-one-group/monorepo/tree/main).
+
 ---
 
 **Happy investigating! 🔍**
