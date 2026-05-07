@@ -4,7 +4,7 @@ A real-world infrastructure repository for the presentation: **"EC2 Looked Norma
 
 This repo demonstrates how a silent provisioning failure was investigated and fixed — caused by an **invalid SSM Parameter Store path** in an IAM policy.
 
-> Presentation slides: [linktr.ee/SintiasInACDID2025](https://linktr.ee/SintiasInACDID2025)
+> Presentation slides: [EC2 Looked Normal, But Silently Failed: Investigating Hidden Issues Behind SSM - Presentation](https://sintiasnn.github.io/assets/slides/EC2%20Looked%20Normal,%20But%20Silently%20Failed_%20Investigating%20Hidden%20Issues%20Behind%20SSM.pdf)
 
 ---
 
