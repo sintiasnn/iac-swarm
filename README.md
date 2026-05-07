@@ -1,10 +1,10 @@
 # iac-swarm ![Terraform](https://img.shields.io/badge/Terraform-1.x-purple?logo=terraform) ![Terragrunt](https://img.shields.io/badge/Terragrunt-latest-blue?logo=gruntwork) ![AWS](https://img.shields.io/badge/AWS-EC2%20%7C%20SSM-orange?logo=amazon-aws) ![License](https://img.shields.io/badge/License-MIT-green)
 
-A real-world infrastructure repository for the presentation: **"EC2 Looked Normal, But Silently Failed: Investigating Hidden Issues Behind SSM"** (ACD Indonesia, 25 Oktober 2025)
+A real-world infrastructure repository for the presentation: **"EC2 Looked Normal, But Silently Failed: Investigating Hidden Issues Behind SSM"** (ACD Indonesia, 25 October 2025)
 
 This repo demonstrates how a silent provisioning failure was investigated and fixed — caused by an **invalid SSM Parameter Store path** in an IAM policy.
 
-> Slide presentasi: [linktr.ee/SintiasInACDID2025](https://linktr.ee/SintiasInACDID2025)
+> Presentation slides: [linktr.ee/SintiasInACDID2025](https://linktr.ee/SintiasInACDID2025)
 
 ---
 
@@ -45,9 +45,9 @@ iac-swarm/
 │   ├── modules/                  # Reusable Terraform modules
 │   │   ├── ec2/                  # EC2 + IAM roles + SSM policy
 │   │   │   └── templates/
-│   │   │       ├── user-data-master.sh       # Init swarm, put token ke SSM
-│   │   │       ├── user-data-master-join.sh  # Join sebagai manager tambahan
-│   │   │       ├── user-data-worker.sh       # Get token dari SSM, join swarm
+│   │   │       ├── user-data-master.sh       # Init swarm, store token to SSM
+│   │   │       ├── user-data-master-join.sh  # Join as additional manager
+│   │   │       ├── user-data-worker.sh       # Get token from SSM, join swarm
 │   │   │       └── user-data-nginx.sh        # Setup nginx reverse proxy
 │   │   ├── vpc/
 │   │   ├── security-group/
@@ -55,14 +55,14 @@ iac-swarm/
 │   │
 │   ├── environments/             # Per-environment Terragrunt configs
 │   │   ├── dev/
-│   │   │   ├── ec2-worker/       ← konfigurasi yang bermasalah (sudah di-fix)
+│   │   │   ├── ec2-worker/       ← misconfigured config (already fixed)
 │   │   │   ├── vpc/
 │   │   │   ├── security-groups/
 │   │   │   └── keypair/
 │   │   ├── staging/
 │   │   └── prod/
 │   │
-│   └── shared/                   # Shared configs lintas environment
+│   └── shared/                   # Shared configs across environments
 │       ├── ec2/                  # Bastion, master, nginx, monitoring
 │       ├── vpc-base/
 │       ├── ecr/
@@ -158,11 +158,11 @@ project_name = "swarm-iac"                 # ← actual prefix used by user-data
 
 ```
 AWS Docker Swarm Cluster
-├── Manager node  — inisialisasi swarm, simpan join token ke SSM
-└── Worker node   — baca join token dari SSM, join swarm
+├── Manager node  — initializes swarm, stores join token to SSM
+└── Worker node   — reads join token from SSM, joins swarm
 ```
 
-Komunikasi antar node menggunakan **AWS SSM Parameter Store** sebagai perantara token:
+Inter-node communication uses **AWS SSM Parameter Store** as a token relay:
 
 ```
 Manager → aws ssm put-parameter /swarm-iac/swarm/<cluster>/worker-token
@@ -173,13 +173,13 @@ Worker  → aws ssm get-parameter /swarm-iac/swarm/<cluster>/worker-token → do
 
 ## SSM Parameter Store
 
-IAM policy di module `ec2` memberikan akses ke path spesifik:
+The IAM policy in the `ec2` module grants access to a specific path:
 
 ```hcl
 ssm_parameter_paths = ["/swarm-iac/swarm/*"]
 ```
 
-Yang di-generate menjadi IAM policy:
+Which generates the following IAM policy:
 
 ```json
 {
@@ -194,10 +194,10 @@ Yang di-generate menjadi IAM policy:
 }
 ```
 
-Parameter yang digunakan:
+Parameters in use:
 
-| Parameter | Dibuat oleh | Dibaca oleh |
-|-----------|-------------|-------------|
+| Parameter | Created by | Read by |
+|-----------|------------|---------|
 | `/swarm-iac/swarm/<cluster>/worker-token` | Manager (init) | Worker |
 | `/swarm-iac/swarm/<cluster>/master-ip` | Manager (init) | Worker |
 
@@ -210,49 +210,49 @@ Parameter yang digunakan:
 - [Terraform](https://developer.hashicorp.com/terraform/install) >= 1.0
 - [Terragrunt](https://terragrunt.gruntwork.io/docs/getting-started/install/) >= 0.50
 - AWS CLI configured
-- SSH key di `~/.ssh/id_rsa`
+- SSH key at `~/.ssh/id_rsa`
 
-### Urutan provisioning
+### Provisioning order
 
 ```sh
 # 1. Shared infrastructure
 cd infra/terragrunt/shared/vpc-base && terragrunt apply
 cd infra/terragrunt/shared/elastic-ip && terragrunt apply
 
-# 2. Environment (contoh: dev)
+# 2. Environment (example: dev)
 cd infra/terragrunt/environments/dev/vpc && terragrunt apply
 cd infra/terragrunt/environments/dev/security-groups && terragrunt apply
 cd infra/terragrunt/environments/dev/keypair && terragrunt apply
 
-# 3. EC2 instances (manager dulu, baru worker)
+# 3. EC2 instances (manager first, then worker)
 cd infra/terragrunt/shared/ec2 && terragrunt apply
 cd infra/terragrunt/environments/dev/ec2-worker && terragrunt apply
 ```
 
-### Validasi pasca provision
+### Post-provision validation
 
 ```sh
-# Cek log provisioning di worker
+# Check provisioning logs on worker
 ssh ubuntu@<worker-ip> "tail -f /var/log/user-data.log"
 
-# Verifikasi SSM parameter tersedia
+# Verify SSM parameter is available
 aws ssm get-parameter --name "/swarm-iac/swarm/app-cluster/worker-token" --with-decryption
 
-# Cek status swarm dari manager
+# Check swarm status from manager
 ssh ubuntu@<manager-ip> "docker node ls"
 ```
 
 ### Docker Stacks (Local)
 
 ```sh
-# Jalankan stack (contoh: postgres)
+# Deploy a stack (example: postgres)
 docker stack deploy -c docker/_stacks_/postgres.yaml postgres
 
-# Atau pakai compose biasa
+# Or use compose directly
 docker-compose -f docker/_stacks_/postgres.yaml up -d
 ```
 
-Stack yang tersedia: `postgres`, `redis`, `minio`, `clickhouse`, `mailpit`, `instrumentation`.
+Available stacks: `postgres`, `redis`, `minio`, `clickhouse`, `mailpit`, `instrumentation`.
 
 ---
 
