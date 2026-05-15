@@ -1,4 +1,6 @@
-# iac-swarm ![Terraform](https://img.shields.io/badge/Terraform-1.x-purple?logo=terraform) ![Terragrunt](https://img.shields.io/badge/Terragrunt-latest-blue?logo=gruntwork) ![AWS](https://img.shields.io/badge/AWS-EC2%20%7C%20SSM-orange?logo=amazon-aws) ![License](https://img.shields.io/badge/License-MIT-green)
+# iac-swarm
+
+![Terraform](https://img.shields.io/badge/Terraform-1.x-purple?logo=terraform) ![Terragrunt](https://img.shields.io/badge/Terragrunt-latest-blue?logo=gruntwork) ![AWS](https://img.shields.io/badge/AWS-EC2%20%7C%20SSM-orange?logo=amazon-aws) ![License](https://img.shields.io/badge/License-MIT-green)
 
 A real-world infrastructure repository for the presentation: **"EC2 Looked Normal, But Silently Failed: Investigating Hidden Issues Behind SSM"**
 
